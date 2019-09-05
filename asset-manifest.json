@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/hue/static/css/main.34de6062.chunk.css",
-    "main.js": "/hue/static/js/main.87d045a9.chunk.js",
-    "main.js.map": "/hue/static/js/main.87d045a9.chunk.js.map",
+    "main.js": "/hue/static/js/main.b7592a65.chunk.js",
+    "main.js.map": "/hue/static/js/main.b7592a65.chunk.js.map",
     "runtime~main.js": "/hue/static/js/runtime~main.bc0e8312.js",
     "runtime~main.js.map": "/hue/static/js/runtime~main.bc0e8312.js.map",
-    "static/js/2.98fb523a.chunk.js": "/hue/static/js/2.98fb523a.chunk.js",
-    "static/js/2.98fb523a.chunk.js.map": "/hue/static/js/2.98fb523a.chunk.js.map",
+    "static/js/2.b2ef8de8.chunk.js": "/hue/static/js/2.b2ef8de8.chunk.js",
+    "static/js/2.b2ef8de8.chunk.js.map": "/hue/static/js/2.b2ef8de8.chunk.js.map",
     "index.html": "/hue/index.html",
-    "precache-manifest.bec85e0993249e41ea0977ee20e59484.js": "/hue/precache-manifest.bec85e0993249e41ea0977ee20e59484.js",
+    "precache-manifest.7f460a254916c3c31af0688e56d4a2d6.js": "/hue/precache-manifest.7f460a254916c3c31af0688e56d4a2d6.js",
     "service-worker.js": "/hue/service-worker.js",
     "static/css/main.34de6062.chunk.css.map": "/hue/static/css/main.34de6062.chunk.css.map"
   }
