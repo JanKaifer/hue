@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d55d980ef12e661c2f7a518b15130d76",
+    "revision": "ff965b970d4c225fe21991cf02534107",
     "url": "/hue/index.html"
   },
   {
-    "revision": "3dd518d770d5c71a5e10",
+    "revision": "6ffeda4435f48aa3a5c6",
     "url": "/hue/static/css/main.34de6062.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/hue/static/js/2.98fb523a.chunk.js"
   },
   {
-    "revision": "3dd518d770d5c71a5e10",
-    "url": "/hue/static/js/main.4ad1d698.chunk.js"
+    "revision": "6ffeda4435f48aa3a5c6",
+    "url": "/hue/static/js/main.87d045a9.chunk.js"
   },
   {
     "revision": "04d7b414907b979508fb",
