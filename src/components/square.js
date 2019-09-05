@@ -8,7 +8,7 @@ import { ItemTypes } from '../Constants'
 const useStyles = makeStyles({
   square: {
     background: '#000',
-    border: p => `0px solid ${ p.correct ? '#CCC': '#000'}`,
+    border: p => `${p.wallSize}px solid ${ p.correct ? '#CCC': '#000'}`,
     position: 'relative',
 
     zIndex: p => p.selected ? 1: 0,
@@ -30,14 +30,14 @@ const useStyles = makeStyles({
   }
 });
 
-function Square({tileColor, onDrop, onClick, selected, fixed, dndItem, correct}) {
+function Square({tileColor, onDrop, onClick, selected, fixed, dndItem, correct, wallSize}) {
   const [, drop] = useDrop({
     accept: ItemTypes.TILE,
     canDrop: () => !fixed,
-    drop: a => {console.log(a); onDrop(a)},
+    drop: onDrop,
   })
 
-  const c = useStyles({selected, fixed, correct});
+  const c = useStyles({selected, fixed, correct, wallSize});
   return (
     <div
       className={c.square}

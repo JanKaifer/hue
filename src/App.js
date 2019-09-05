@@ -79,7 +79,7 @@ const genBoard = (correctBoard, iter=1) => {
       )
     }
   }
-  if (!correctColors([].concat(...board)) && iter < 100) correctBoard.current = genBoard({}, iter+1)
+  if (!correctColors([].concat(...board)) && iter < 100) return genBoard(correctBoard, iter+1)
   else {
     correctBoard.current = board
     console.log("it took", iter, "iterations")
@@ -130,6 +130,12 @@ function App() {
     })
     console.log('swapped', a, 'and', b)
   }
+
+  const solve = () => {
+    setBoard(correctBoard.current)
+  }
+
+  window.solve = solve
 
   return (
     <div className={c.app}>

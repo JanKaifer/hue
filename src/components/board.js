@@ -28,6 +28,8 @@ function Board({board, correctBoard, swap}) {
   const c = useStyles({ W, H })
 
   const [ selected, setSelected ] = React.useState(undefined)
+  const [ wallSize, setWallSize ] = React.useState(0)
+  window.setWallSize = setWallSize
 
   return (
     <DndProvider backend={HTML5Backend} options={{enableMouseEvents: true, preview: true}}>
@@ -62,6 +64,7 @@ function Board({board, correctBoard, swap}) {
                       setSelected(undefined)
                     }
                   }}
+                  wallSize={wallSize}
                 />
               )
             }
