@@ -7,12 +7,12 @@ import { ItemTypes } from '../Constants'
 
 const useStyles = makeStyles({
   square: {
-    background: p => p.selected ? '#CFC': '#EEE',
-    border: p => `1px solid '#CCC'`,
+    background: '#000',
+    border: `1px solid '#CCC'`,
 
     zIndex: p => p.selected ? 1: 0,
     transform: p => p.selected ? 'scale(1.2)': 'scale(1)',
-    transition: 'all .25s ease-out',
+    transition: 'all .1s ease-out',
   }
 });
 

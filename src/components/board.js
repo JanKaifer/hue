@@ -30,7 +30,7 @@ function Board({board, swap}) {
   const [ selected, setSelected ] = React.useState(undefined)
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={TouchBackend} options={{enableMouseEvents: true}}>
       <div
         className={c.board}
       >
