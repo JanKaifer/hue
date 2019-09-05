@@ -114,6 +114,7 @@ function App() {
       const pid = setTimeout(() => {
         alert(`E> Yay you did it! <3 It took you ${counter} steps. World averadge is ${counter*2}.`)
         setBoard(genBoard(correctBoard))
+        setCounter(0)
       }, 500)
       return () => clearTimeout(pid)
     }
