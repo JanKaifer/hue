@@ -30,7 +30,7 @@ function Board({board, swap}) {
   const [ selected, setSelected ] = React.useState(undefined)
 
   return (
-    <DndProvider backend={TouchBackend} options={{enableMouseEvents: true}}>
+    <DndProvider backend={HTML5Backend} options={{enableMouseEvents: true, preview: true}}>
       <div
         className={c.board}
       >
@@ -49,8 +49,6 @@ function Board({board, swap}) {
                   selected={selected !== undefined && sameField(selected, {x, y})}
                   onDrop={item => {
                     swap(item.pos, {x, y})
-                    console.log('dropped', item.pos, 'on: ', {x, y})
-
                   }}
                   onClick={() => {
                     if (selected === undefined) {

@@ -5,11 +5,12 @@ import Board from './components/board'
 import { ItemTypes } from './Constants'
 
 const [ W, H ] = [5, 5]
+const SIM_CONST = 20
 
 const randomColor = () => {
   let color = []
   for (let i = 0; i < 3; i++) {
-    color.push(Math.floor(Math.random() * 256 - 0.001))
+    color.push(Math.floor(Math.random() * 256))
   }
   return color
 }
@@ -22,7 +23,7 @@ const getColors = () => {
   let colors = []
   for (let i = 0; i < 4;) {
     let color = randomColor()
-    if (colors.length && Math.min(...colors.map(c => colorDist(c, color))) < 100) {
+    if (colors.length && Math.min(...colors.map(c => colorDist(c, color))) < SIM_CONST*(W-1)) {
       continue;
     } else {
       colors.push(color);
@@ -36,7 +37,26 @@ const combineColors = (colorA, coefA, colorB, coefB) => {
   return colorA.map((item, i) => Math.floor((colorA[i]*coefA + colorB[i]*coefB)/(coefA+coefB) + .5))
 }
 
-const genBoard = () => {
+const shuffleBoard = board => {
+  let colors = []
+  for (let i = 0; i < W; ++i) {
+    for (let j = 0; j < H; ++j) {
+      if ((i === 0 || i === W-1) && (j === 0 || j === H-1)) continue
+      colors.push(board[i][j])
+    }
+  }
+  
+  for (let i = 0; i < W; ++i) {
+    for (let j = 0; j < H; ++j) {
+      if ((i === 0 || i === W-1) && (j === 0 || j === H-1)) continue
+      board[i][j] = colors[Math.floor(Math.random()*colors.length)]
+      colors = colors.filter(c => c !== board[i][j])
+    }
+  }
+  return board
+}
+
+const genBoard = (correctBoard, iter=1) => {
   const colors = getColors();
   const board = []
   for (let i = 0; i < W; ++i) {
@@ -49,7 +69,35 @@ const genBoard = () => {
       )
     }
   }
-  return board
+  let ok = true;
+  for (let i = 0; i < W && ok; ++i) {
+    for (let j = 0; j < H && ok;  ++j) {
+
+      [-1, 0, 1].forEach(x => [-1, 0, 1].forEach(y => {
+        if (x === 0 && y == 0) return
+        else if ((board[i+x] || [])[j+y] !== undefined && colorDist(board[i][j], board[i+x][j+y]) < SIM_CONST) {
+          ok = false
+        }
+      }))
+    }
+  }
+  if (!ok && iter < 100) correctBoard.current = genBoard({}, iter+1)
+  else {
+    correctBoard.current = board
+    console.log("it took", iter, "iterations")
+  }
+  return shuffleBoard(JSON.parse(JSON.stringify(correctBoard.current)))
+}
+
+const checkWin = (board, correctBoard) => {
+  for (let i = 0; i < W; ++i) {
+    for (let j = 0; j < H; ++j) {
+      if (JSON.stringify(board[i][j]) !== JSON.stringify(correctBoard.current[i][j])) {
+        return false
+      }
+    }
+  }
+  return true
 }
 
 const useStyles = makeStyles({
@@ -59,7 +107,13 @@ const useStyles = makeStyles({
 
 function App() {
   const c = useStyles();
-  const [ board, setBoard ] = React.useState(genBoard())
+  const correctBoard = React.useRef()
+  const [ board, setBoard ] = React.useState(genBoard(correctBoard))
+  React.useEffect(() => {
+    if (checkWin(board, correctBoard)) {
+      alert("E> Yay you did it! <3")
+    }
+  }, [board])
 
   const swap = (a, b) => {
     setBoard(board_old => {
