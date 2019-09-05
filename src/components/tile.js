@@ -8,22 +8,20 @@ const useStyles = makeStyles({
   tile: {
     height: '100%',
     width: '100%',
-    background: 'red',
-    opacity: p => p.isDragging ? .5: 1,
-    cursor: 'move',
+    background: p => `rgb(${p.color.join(", ")})`,
+    opacity: p => p.isDragging ? 0: 1,
+    cursor: 'pointer',
   }
 });
 
-function Tile({}) {
+function Tile({color, item}) {
   const [ {isDragging}, drag ] = useDrag({
-    item: {
-      type: ItemTypes.TILE,
-		},
+    item,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
     })
   })
-  const c = useStyles({isDragging});
+  const c = useStyles({isDragging, color});
   return (
     <div
       className={c.tile}

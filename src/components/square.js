@@ -7,24 +7,29 @@ import { ItemTypes } from '../Constants'
 
 const useStyles = makeStyles({
   square: {
-    background: '#EEE',
-    border: p => `1px solid ${ p.hasTile ? '#FAA': '#CCC'}`,
+    background: p => p.selected ? '#CFC': '#EEE',
+    border: p => `1px solid '#CCC'`,
+
+    zIndex: p => p.selected ? 1: 0,
+    transform: p => p.selected ? 'scale(1.2)': 'scale(1)',
+    transition: 'all .25s ease-out',
   }
 });
 
-function Square({hasTile, onDrop}) {
+function Square({tileColor, onDrop, onClick, selected, dndItem}) {
   const [, drop] = useDrop({
     accept: ItemTypes.TILE,
     drop: onDrop,
   })
 
-  const c = useStyles({hasTile});
+  const c = useStyles({selected});
   return (
     <div
       className={c.square}
       ref={drop}
+      onClick={onClick}
     >
-      {hasTile && <Tile/>}
+      <Tile color={tileColor} item={dndItem}/>
     </div>
   );
 }

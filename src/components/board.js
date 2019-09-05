@@ -7,26 +7,9 @@ import TouchBackend from 'react-dnd-touch-backend'
 import Square from './square'
 import { ItemTypes } from '../Constants'
 
-
-// Stolen from Stack overflow: https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-function is_touch_device() {
-  return true
-  var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
-  var mq = function(query) {
-    return window.matchMedia(query).matches;
-  }
-
-  if (('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch) {
-    return true;
-  }
-
-  // include the 'heartz' as a way to have a non matching MQ to help terminate the join
-  // https://git.io/vznFH
-  var query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
-  return mq(query);
+const sameField = (a, b) => {
+  return a.x === b.x && a.y === b.y
 }
-
-const [ W, H ] = [5, 5]
 
 const useStyles = makeStyles({
   board: {
@@ -34,16 +17,20 @@ const useStyles = makeStyles({
     width: 500,
 
     display: 'grid',
-    gridTemplateColumns: `repeat(${W}, 1fr)`,
-    gridTemplateRows:    `repeat(${H}, 1fr)`,
+    gridTemplateColumns: p => `repeat(${p.W}, 1fr)`,
+    gridTemplateRows: p => `repeat(${p.H}, 1fr)`,
   }
 });
 
-function Board({pos, setPos}) {
-  const c = useStyles();
-  console.log("Using touch: " + is_touch_device())
+function Board({board, swap}) {
+  const W = board.length
+  const H = (board[0] || []).length
+  const c = useStyles({ W, H })
+
+  const [ selected, setSelected ] = React.useState(undefined)
+
   return (
-    <DndProvider backend={is_touch_device() ? TouchBackend: HTML5Backend} options={{enableMouseEvents: true}}>
+    <DndProvider backend={HTML5Backend}>
       <div
         className={c.board}
       >
@@ -54,8 +41,27 @@ function Board({pos, setPos}) {
               squares.push(
                 <Square
                   key={[x,y].join(', ')}
-                  hasTile={pos.x === x && pos.y === y}
-                  onDrop={() => setPos({x, y})}
+                  tileColor={board[x][y]}
+                  dndItem={{
+                    type: ItemTypes.TILE,
+                    pos: {x, y},
+                  }}
+                  selected={selected !== undefined && sameField(selected, {x, y})}
+                  onDrop={item => {
+                    swap(item.pos, {x, y})
+                    console.log('dropped', item.pos, 'on: ', {x, y})
+
+                  }}
+                  onClick={() => {
+                    if (selected === undefined) {
+                      setSelected({x, y})
+                    } else {
+                      if (!sameField(selected, {x, y})) {
+                        swap(selected, {x, y})
+                      }
+                      setSelected(undefined)
+                    }
+                  }}
                 />
               )
             }
