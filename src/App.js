@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/styles'
 import Board from './components/board'
 import { ItemTypes } from './Constants'
 
-const [ W, H ] = [5, 5]
-const SIM_CONST = 20
+let [ W, H ] = [5, 5]
+const SIM_CONST = 30
 
 const randomColor = () => {
   let color = []
@@ -19,15 +19,29 @@ const colorDist = (a, b) => {
   return Math.max(...a.map((item, i) => Math.abs(a[i] - b[i])))
 }
 
+const correctColors = colors => {
+  let ok = true
+
+  colors.forEach((c1, i)=> {
+    colors.forEach((c2, j) => {
+      if (i === j) return
+      if (Math.max(...c1.map((c, k) => Math.abs(c - c2[k]))) < SIM_CONST) {
+        ok = false
+        return
+      }
+    })
+  })
+  return ok
+}
+
 const getColors = () => {
   let colors = []
-  for (let i = 0; i < 4;) {
+  for (let i = 0, j = 4; i < j; ++i) {
     let color = randomColor()
-    if (colors.length && Math.min(...colors.map(c => colorDist(c, color))) < SIM_CONST*(W-1)) {
-      continue;
+    if (j < 100 && colors.length && Math.min(...colors.map(c => colorDist(c, color))) < SIM_CONST*(W-1)) {
+      ++j;
     } else {
       colors.push(color);
-      ++i;
     }
   }
   return colors;
@@ -69,19 +83,7 @@ const genBoard = (correctBoard, iter=1) => {
       )
     }
   }
-  let ok = true;
-  for (let i = 0; i < W && ok; ++i) {
-    for (let j = 0; j < H && ok;  ++j) {
-
-      [-1, 0, 1].forEach(x => [-1, 0, 1].forEach(y => {
-        if (x === 0 && y == 0) return
-        else if ((board[i+x] || [])[j+y] !== undefined && colorDist(board[i][j], board[i+x][j+y]) < SIM_CONST) {
-          ok = false
-        }
-      }))
-    }
-  }
-  if (!ok && iter < 100) correctBoard.current = genBoard({}, iter+1)
+  if (!correctColors([].concat(...board)) && iter < 100) correctBoard.current = genBoard({}, iter+1)
   else {
     correctBoard.current = board
     console.log("it took", iter, "iterations")
@@ -93,6 +95,7 @@ const checkWin = (board, correctBoard) => {
   for (let i = 0; i < W; ++i) {
     for (let j = 0; j < H; ++j) {
       if (JSON.stringify(board[i][j]) !== JSON.stringify(correctBoard.current[i][j])) {
+        //console.log('at', [i, j], board[i][j], 'is not same as', correctBoard.current[i][j])
         return false
       }
     }
@@ -108,14 +111,20 @@ const useStyles = makeStyles({
 function App() {
   const c = useStyles();
   const correctBoard = React.useRef()
-  const [ board, setBoard ] = React.useState(genBoard(correctBoard))
+  const [ board, setBoard ] = React.useState(() => genBoard(correctBoard))
+  const [ counter, setCounter ] = React.useState(0)
   React.useEffect(() => {
     if (checkWin(board, correctBoard)) {
-      alert("E> Yay you did it! <3")
+      const pid = setTimeout(() => {
+        alert(`E> Yay you did it! <3 It took you ${counter} steps. World averadge is ${counter*2}.`)
+        setBoard(genBoard(correctBoard))
+      }, 500)
+      return () => clearTimeout(pid)
     }
   }, [board])
 
   const swap = (a, b) => {
+    setCounter(c => c+1)
     setBoard(board_old => {
       let board = JSON.parse(JSON.stringify(board_old))
       let helper = board[a.x][a.y]
@@ -123,11 +132,12 @@ function App() {
       board[b.x][b.y] = helper
       return board
     })
+    console.log('swapped', a, 'and', b)
   }
 
   return (
     <div className={c.app}>
-      <Board board={board} swap={swap}/>
+      <Board board={board} correctBoard={correctBoard.current} swap={swap}/>
     </div>
   );
 }

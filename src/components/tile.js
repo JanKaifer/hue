@@ -10,13 +10,13 @@ const useStyles = makeStyles({
     width: '100%',
     background: p => `rgb(${p.color.join(", ")})`,
     opacity: p => p.isDragging ? 0: 1,
-    cursor: 'pointer',
   }
 });
 
-function Tile({color, item}) {
+function Tile({color, item, fixed}) {
   const [ {isDragging}, drag ] = useDrag({
     item,
+    canDrag: () => !fixed,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
     })

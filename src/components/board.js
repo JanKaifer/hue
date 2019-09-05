@@ -13,8 +13,8 @@ const sameField = (a, b) => {
 
 const useStyles = makeStyles({
   board: {
-    height: 500,
-    width: 500,
+    height: '100vmin',
+    width: '100vmin',
 
     display: 'grid',
     gridTemplateColumns: p => `repeat(${p.W}, 1fr)`,
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   }
 });
 
-function Board({board, swap}) {
+function Board({board, correctBoard, swap}) {
   const W = board.length
   const H = (board[0] || []).length
   const c = useStyles({ W, H })
@@ -42,6 +42,8 @@ function Board({board, swap}) {
                 <Square
                   key={[x,y].join(', ')}
                   tileColor={board[x][y]}
+                  fixed={(y === 0 || y === H-1) && (x === 0 || x === W-1)}
+                  correct={JSON.stringify(board[x][y]) === JSON.stringify(correctBoard[x][y])}
                   dndItem={{
                     type: ItemTypes.TILE,
                     pos: {x, y},
