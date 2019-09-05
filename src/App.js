@@ -2,17 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles'
 
 import Board from './components/board'
-import { ItemTypes } from './Constants'
+import { ItemTypes, COLORS } from './Constants'
 
 let [ W, H ] = [5, 5]
-const SIM_CONST = 30
+const SIM_CONST = 50
 
 const randomColor = () => {
-  let color = []
-  for (let i = 0; i < 3; i++) {
-    color.push(Math.floor(Math.random() * 256))
-  }
-  return color
+  return COLORS[Math.floor(Math.random() * COLORS.length)]
 }
 
 const colorDist = (a, b) => {
