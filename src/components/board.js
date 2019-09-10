@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     height: '100vmin',
     width: '100vmin',
 
-    display: 'grid',
+    display: 'inline-grid',
     gridTemplateColumns: p => `repeat(${p.W}, 1fr)`,
     gridTemplateRows: p => `repeat(${p.H}, 1fr)`,
   }
